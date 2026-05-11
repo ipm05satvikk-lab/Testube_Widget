@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Root Labs Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:transparent;overflow:hidden;font-family:'Inter',sans-serif}
+
+  /* ============================================================
+     CARD — bottom-left, cream background, sized for mobile readability
+     ============================================================ */
+  .card{
+    position:fixed;bottom:24px;left:24px;
+    width:380px;
+    background:#FAF4E8;
+    border:1.5px solid rgba(31,77,58,0.18);
+    border-radius:20px;
+    padding:18px 22px 20px;
+    color:#1F4D3A;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .gold-rule{position:absolute;top:0;left:18%;right:18%;height:2px;
+    background:linear-gradient(90deg,transparent,#C9A84C,transparent);opacity:0.7}
+
+  /* ============================================================
+     CTA — the hero element. Top of card. Sienna orange.
+     ============================================================ */
+  .cta{
+    text-align:center;
+    margin-bottom:14px;
+  }
+  .cta-label{
+    font-family:'Inter',sans-serif;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:2.5px;
+    color:#1F4D3A;
+    opacity:0.55;
+    margin-bottom:4px;
+  }
+  .cta-main{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:21px;
+    line-height:1.15;
+    color:#D26B2C;
+    letter-spacing:-0.2px;
+    animation:ctaPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes ctaPulse{
+    0%,100%{opacity:1}
+    50%{opacity:0.72}
+  }
+
+  /* ============================================================
+     MAIN ROW — tube on left, milestones on right
+     ============================================================ */
+  .main{
+    display:flex;
+    gap:14px;
+    align-items:stretch;
+    margin-bottom:14px;
+  }
+
+  .tube-wrap{
+    position:relative;
+    width:96px;
+    height:260px;
+    flex-shrink:0;
+  }
+
+  .miles{
+    flex:1;
+    position:relative;
+    height:260px;
+  }
+  .mile{
+    position:absolute;
+    left:0;right:0;
+    display:flex;align-items:center;gap:10px;
+    transition:all 0.4s ease;
+  }
+  .mile-dot{
+    width:12px;height:12px;
+    border-radius:50%;
+    border:2px solid rgba(31,77,58,0.22);
+    background:#FAF4E8;
+    flex-shrink:0;
+    transition:all 0.5s ease;
+  }
+  .mile.on .mile-dot{
+    background:#C9A84C;
+    border-color:#C9A84C;
+    box-shadow:0 0 12px rgba(201,168,76,0.5);
+  }
+  .mile-text{flex:1;min-width:0}
+  .mile-label{
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.15;
+    color:rgba(31,77,58,0.45);
+    transition:color 0.4s ease;
+  }
+  .mile-detail{
+    font-family:'Inter',sans-serif;
+    font-size:10px;
+    font-weight:600;
+    line-height:1.2;
+    margin-top:2px;
+    color:rgba(31,77,58,0.35);
+    transition:color 0.4s ease;
+  }
+  .mile.on .mile-label{
+    color:#1F4D3A;
+    font-weight:800;
+  }
+  .mile.on .mile-detail{
+    color:#D26B2C;
+  }
+  .mile-unlock{
+    display:none;
+    font-size:8.5px;
+    font-weight:800;
+    letter-spacing:1.2px;
+    color:#C9A84C;
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+  .mile.on .mile-unlock{display:block}
+
+  /* ============================================================
+     FILL STATS — bottom band
+     ============================================================ */
+  .stats{
+    padding-top:12px;
+    border-top:1px solid rgba(31,77,58,0.12);
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .stats-pct{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:32px;
+    line-height:1;
+    color:#1F4D3A;
+    letter-spacing:-1px;
+  }
+  .stats-meta{
+    text-align:right;
+  }
+  .stats-clicks{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:14px;
+    color:#1F4D3A;
+  }
+  .stats-of{
+    font-family:'Inter',sans-serif;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    color:rgba(31,77,58,0.5);
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+
+  /* ============================================================
+     ABSORPTION LAB tag — small brand element top-right of card
+     ============================================================ */
+  .brand-tag{
+    position:absolute;
+    top:14px;right:18px;
+    font-family:'Inter',sans-serif;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:2.5px;
+    color:#1F4D3A;
+    opacity:0.4;
+    display:flex;align-items:center;gap:4px;
+  }
+
+  /* ============================================================
+     TUBE ANIMATIONS
+     ============================================================ */
+  @keyframes bubbleUp{
+    0%{opacity:0.5;transform:translateY(0) scale(1)}
+    100%{opacity:0;transform:translateY(-240px) scale(0.3)}
+  }
+  @keyframes beadFloat{
+    0%,100%{transform:translateY(0) translateX(0)}
+    33%{transform:translateY(-6px) translateX(2px)}
+    66%{transform:translateY(-2px) translateX(-3px)}
+  }
+  @keyframes burstOut{
+    0%{opacity:1;transform:rotate(var(--a)) translateY(0)}
+    100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--d)*-1))}
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="gold-rule"></div>
+  <div class="brand-tag">🧪 ABSORPTION LAB</div>
+
+  <!-- TOP CTA — hero element, sienna orange, animated -->
+  <div class="cta">
+    <div class="cta-label">EVERY TAP UNLOCKS A DEAL</div>
+    <div class="cta-main">Tap the product link<br>to unlock</div>
+  </div>
+
+  <!-- MAIN: tube + milestones -->
+  <div class="main">
+    <div class="tube-wrap">
+      <svg id="tube-svg" width="96" height="260" viewBox="0 0 96 260">
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5BC88A" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#2A7A52" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(31,77,58,0.08)"/>
+            <stop offset="40%" stop-color="rgba(31,77,58,0.02)"/>
+            <stop offset="100%" stop-color="rgba(31,77,58,0.06)"/>
+          </linearGradient>
+          <clipPath id="tc">
+            <rect x="10" y="20" width="76" height="220" rx="8"/>
+            <ellipse cx="48" cy="240" rx="40" ry="12"/>
+          </clipPath>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/>
+            <feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+        </defs>
+        <!-- Tube body -->
+        <rect x="10" y="16" width="76" height="224" rx="8" fill="url(#glass)" stroke="rgba(31,77,58,0.35)" stroke-width="1.5"/>
+        <ellipse cx="48" cy="240" rx="38" ry="11" fill="url(#glass)" stroke="rgba(31,77,58,0.35)" stroke-width="1.5"/>
+        <!-- Liquid inside, clipped to tube shape -->
+        <g clip-path="url(#tc)">
+          <rect id="liquid" x="11" y="240" width="74" height="0" fill="url(#lg)" filter="url(#glow)"/>
+          <ellipse id="surface" cx="48" cy="240" rx="36" ry="3.5" fill="#5BC88A" opacity="0"/>
+        </g>
+        <!-- Tube stopper / cap -->
+        <rect x="4" y="10" width="88" height="12" rx="3" fill="rgba(31,77,58,0.12)" stroke="rgba(31,77,58,0.4)" stroke-width="1"/>
+        <!-- Highlight stripe inside tube -->
+        <rect x="18" y="24" width="3" height="200" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+        <!-- Tick marks at 25/50/75 -->
+        <line x1="10" y1="63" x2="20" y2="63" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick75"/>
+        <line x1="10" y1="118" x2="20" y2="118" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick50"/>
+        <line x1="10" y1="173" x2="20" y2="173" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick25"/>
+      </svg>
+      <div id="bubbles" style="position:absolute;left:11px;bottom:14px;width:74px;height:220px;overflow:hidden;pointer-events:none"></div>
+      <div id="beadlets" style="position:absolute;left:11px;bottom:14px;width:74px;height:220px;overflow:hidden;pointer-events:none"></div>
+      <div id="burst" style="position:absolute;left:48px;top:130px;pointer-events:none"></div>
+    </div>
+
+    <!-- All four milestones visible from the start.
+         Locked = soft cream/grey; unlocked = forest + gold dot + sienna detail -->
+    <div class="miles">
+      <div class="mile" id="m3" style="bottom:225px">
+        <div class="mile-dot"></div>
+        <div class="mile-text">
+          <div class="mile-label">Max potency</div>
+          <div class="mile-detail">30% OFF everything</div>
+          <div class="mile-unlock">★ UNLOCKED</div>
+        </div>
+      </div>
+      <div class="mile" id="m2" style="bottom:170px">
+        <div class="mile-dot"></div>
+        <div class="mile-text">
+          <div class="mile-label">Free shipping</div>
+          <div class="mile-detail">All bundles</div>
+          <div class="mile-unlock">★ UNLOCKED</div>
+        </div>
+      </div>
+      <div class="mile" id="m1" style="bottom:115px">
+        <div class="mile-dot"></div>
+        <div class="mile-text">
+          <div class="mile-label">Bundle deal</div>
+          <div class="mile-detail">2-pack 25% OFF</div>
+          <div class="mile-unlock">★ UNLOCKED</div>
+        </div>
+      </div>
+      <div class="mile" id="m0" style="bottom:60px">
+        <div class="mile-dot"></div>
+        <div class="mile-text">
+          <div class="mile-label">Flash sale</div>
+          <div class="mile-detail">20% OFF</div>
+          <div class="mile-unlock">★ UNLOCKED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL STATS -->
+  <div class="stats">
+    <div class="stats-pct" id="pct">0%</div>
+    <div class="stats-meta">
+      <div class="stats-clicks"><span id="clicks">0</span> / <span id="target">500</span></div>
+      <div class="stats-of">To fill the tube</div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io();
+
+var liquid = document.getElementById("liquid");
+var surface = document.getElementById("surface");
+var pctEl = document.getElementById("pct");
+var clicksEl = document.getElementById("clicks");
+var targetEl = document.getElementById("target");
+var bubblesEl = document.getElementById("bubbles");
+var beadletsEl = document.getElementById("beadlets");
+var burstEl = document.getElementById("burst");
+var ticks = [
+  document.getElementById("tick25"),
+  document.getElementById("tick50"),
+  document.getElementById("tick75"),
+];
+
+var prevMilestones = [false, false, false, false];
+var beadletsCreated = false;
+var currentFillPct = 0;
+
+function updateUI(s) {
+  var pct = s.fillPct;
+  currentFillPct = pct;
+  // Liquid fill geometry: top of fill area = y=20, bottom = y=240, range = 220px
+  var maxH = 220;
+  var h = (pct / 100) * maxH;
+  var y = 240 - h;
+
+  liquid.setAttribute("height", h);
+  liquid.setAttribute("y", y);
+
+  if (pct > 3) {
+    surface.setAttribute("cy", y);
+    surface.setAttribute("opacity", "0.5");
+  } else {
+    surface.setAttribute("opacity", "0");
+  }
+
+  pctEl.textContent = pct + "%";
+  clicksEl.textContent = s.clicks.toLocaleString();
+  targetEl.textContent = s.target.toLocaleString();
+
+  // Tick marks: gold + thicker when passed
+  [25, 50, 75].forEach(function(m, i) {
+    ticks[i].setAttribute("stroke", pct >= m ? "#C9A84C" : "rgba(31,77,58,0.35)");
+    ticks[i].setAttribute("stroke-width", pct >= m ? "2" : "1");
+  });
+
+  // Milestones
+  s.milestones.forEach(function(reached, i) {
+    var el = document.getElementById("m" + i);
+    el.className = "mile" + (reached ? " on" : "");
+    if (reached && !prevMilestones[i]) fireBurst();
+  });
+  prevMilestones = s.milestones.slice();
+
+  if (pct > 8) {
+    updateBeadlets(pct);
+  }
+  if (pct <= 5 && beadletsCreated) {
+    beadletsEl.innerHTML = "";
+    beadletsCreated = false;
+  }
+  if (pct > 5) spawnBubble();
+}
+
+function updateBeadlets(pct) {
+  if (!beadletsCreated) {
+    beadletsCreated = true;
+    for (var i = 0; i < 7; i++) {
+      var b = document.createElement("div");
+      var sz = 5 + Math.random() * 6;
+      var maxBottom = Math.min(pct * 0.6, 55);
+      b.style.cssText = "position:absolute;bottom:" + (2 + Math.random() * maxBottom) + "%;" +
+        "left:" + (10 + Math.random() * 70) + "%;" +
+        "width:" + sz + "px;height:" + sz + "px;border-radius:50%;" +
+        "background:radial-gradient(circle at 35% 35%,rgba(255,255,255,0.7),rgba(91,200,138,0.3));" +
+        "animation:beadFloat " + (2 + i * 0.5) + "s ease-in-out " + (i * 0.3) + "s infinite;" +
+        "opacity:" + (0.6 + Math.random() * 0.3);
+      beadletsEl.appendChild(b);
+    }
+  }
+}
+
+function spawnBubble() {
+  if (bubblesEl.children.length > 6) return;
+  var b = document.createElement("div");
+  var sz = 3 + Math.random() * 5;
+  b.style.cssText = "position:absolute;bottom:0;left:" + (15 + Math.random() * 60) + "%;" +
+    "width:" + sz + "px;height:" + sz + "px;border-radius:50%;" +
+    "border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.15);" +
+    "animation:bubbleUp " + (2 + Math.random() * 2) + "s ease-out forwards";
+  bubblesEl.appendChild(b);
+  setTimeout(function() { if (b.parentNode) b.parentNode.removeChild(b); }, 4000);
+}
+
+function fireBurst() {
+  burstEl.innerHTML = "";
+  for (var i = 0; i < 14; i++) {
+    var p = document.createElement("div");
+    var c = i % 2 === 0 ? "#C9A84C" : "#D26B2C";
+    p.style.cssText = "position:absolute;width:5px;height:5px;border-radius:50%;background:" + c + ";" +
+      "--a:" + (i * 26) + "deg;--d:" + (35 + Math.random() * 30) + "px;" +
+      "animation:burstOut 0.8s " + (i * 0.025) + "s ease-out forwards;opacity:0";
+    burstEl.appendChild(p);
+  }
+  setTimeout(function() { burstEl.innerHTML = ""; }, 1100);
+}
+
+setInterval(function() { if (currentFillPct > 5) spawnBubble(); }, 800);
+
+socket.on("state", updateUI);
+</script>
+</body>
+</html>
