@@ -10,11 +10,11 @@
   body{background:transparent;overflow:hidden;font-family:'Inter',sans-serif}
 
   /* ============================================================
-     CARD — bottom-left, cream background, sized for mobile readability
+     CARD - tightened to 260px; removes remaining empty right gutter
      ============================================================ */
   .card{
     position:fixed;bottom:24px;left:24px;
-    width:360px;
+    width:260px;
     background:#FAF4E8;
     border:1.5px solid rgba(31,77,58,0.18);
     border-radius:18px;
@@ -26,7 +26,7 @@
     background:linear-gradient(90deg,transparent,#C9A84C,transparent);opacity:0.7}
 
   /* ============================================================
-     CTA — the hero element. Top of card. Sienna orange.
+     CTA - hero element, sienna orange, animated
      ============================================================ */
   .cta{
     text-align:center;
@@ -57,7 +57,7 @@
   }
 
   /* ============================================================
-     MAIN ROW — tube on left, milestones on right
+     MAIN ROW - slimmer tube on left, milestones on right
      ============================================================ */
   .main{
     display:flex;
@@ -68,7 +68,7 @@
 
   .tube-wrap{
     position:relative;
-    width:88px;
+    width:50px;
     height:190px;
     flex-shrink:0;
   }
@@ -134,7 +134,7 @@
   .mile.on .mile-unlock{display:block}
 
   /* ============================================================
-     FILL STATS — bottom band
+     FILL STATS
      ============================================================ */
   .stats{
     padding-top:8px;
@@ -171,26 +171,11 @@
   }
 
   /* ============================================================
-     ABSORPTION LAB tag — small brand element top-right of card
-     ============================================================ */
-  .brand-tag{
-    position:absolute;
-    top:14px;right:18px;
-    font-family:'Inter',sans-serif;
-    font-size:8px;
-    font-weight:800;
-    letter-spacing:2.5px;
-    color:#1F4D3A;
-    opacity:0.4;
-    display:flex;align-items:center;gap:4px;
-  }
-
-  /* ============================================================
      TUBE ANIMATIONS
      ============================================================ */
   @keyframes bubbleUp{
     0%{opacity:0.5;transform:translateY(0) scale(1)}
-    100%{opacity:0;transform:translateY(-240px) scale(0.3)}
+    100%{opacity:0;transform:translateY(-200px) scale(0.3)}
   }
   @keyframes beadFloat{
     0%,100%{transform:translateY(0) translateX(0)}
@@ -208,52 +193,81 @@
 <div class="card">
   <div class="gold-rule"></div>
 
-  <!-- TOP CTA — hero element, sienna orange, animated -->
+  <!-- TOP CTA -->
   <div class="cta">
     <div class="cta-label">EVERY TAP UNLOCKS A DEAL</div>
     <div class="cta-main">Tap the product link<br>to unlock</div>
   </div>
 
-  <!-- MAIN: tube + milestones -->
+  <!-- MAIN: test tube + milestones -->
   <div class="main">
     <div class="tube-wrap">
-      <svg id="tube-svg" width="88" height="190" viewBox="0 0 88 190">
+      <!--
+        TEST TUBE GEOMETRY (viewBox 50 x 190):
+        - Lip top opening:  x = 2 to 48  at y = 10
+        - Body straight:    x = 7 to 43  from y = 18 to y = 160
+        - Rounded bottom:   semicircle from (7,160) to (43,160), bulging to y = 178
+        - Liquid fill:      from y = 178 (0%) up to y = 18 (100%), range = 160px
+      -->
+      <svg id="tube-svg" width="50" height="190" viewBox="0 0 50 190">
         <defs>
           <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#5BC88A" stop-opacity="0.95"/>
             <stop offset="100%" stop-color="#2A7A52" stop-opacity="1"/>
           </linearGradient>
           <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="rgba(31,77,58,0.08)"/>
-            <stop offset="40%" stop-color="rgba(31,77,58,0.02)"/>
-            <stop offset="100%" stop-color="rgba(31,77,58,0.06)"/>
+            <stop offset="0%" stop-color="rgba(31,77,58,0.10)"/>
+            <stop offset="50%" stop-color="rgba(31,77,58,0.02)"/>
+            <stop offset="100%" stop-color="rgba(31,77,58,0.08)"/>
           </linearGradient>
           <clipPath id="tc">
-            <rect x="8" y="10" width="72" height="160" rx="8"/>
-            <ellipse cx="44" cy="170" rx="38" ry="11"/>
+            <path d="M 7 18 L 7 160 A 18 18 0 0 0 43 160 L 43 18 Z"/>
           </clipPath>
-          <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/>
-            <feComposite in="SourceGraphic" in2="b" operator="over"/></filter>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feComposite in="SourceGraphic" in2="b" operator="over"/>
+          </filter>
         </defs>
-        <!-- Tube body (clean top, no stopper) -->
-        <rect x="8" y="8" width="72" height="162" rx="8" fill="url(#glass)" stroke="rgba(31,77,58,0.35)" stroke-width="1.5"/>
-        <ellipse cx="44" cy="170" rx="36" ry="10" fill="url(#glass)" stroke="rgba(31,77,58,0.35)" stroke-width="1.5"/>
+
+        <!-- Tube outline: flared lip -> cylindrical body -> rounded U bottom -->
+        <path d="M 2 10 L 7 18 L 7 160 A 18 18 0 0 0 43 160 L 43 18 L 48 10"
+              fill="url(#glass)"
+              stroke="rgba(31,77,58,0.4)"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+              stroke-linecap="round"/>
+
+        <!-- Top rim ellipse (gives the opening a 3D oval look) -->
+        <ellipse cx="25" cy="10" rx="23" ry="2.5"
+                 fill="rgba(31,77,58,0.05)"
+                 stroke="rgba(31,77,58,0.4)"
+                 stroke-width="1"/>
+
+        <!-- Liquid (clipped to tube interior so it conforms to the rounded bottom) -->
         <g clip-path="url(#tc)">
-          <rect id="liquid" x="9" y="170" width="70" height="0" fill="url(#lg)" filter="url(#glow)"/>
-          <ellipse id="surface" cx="44" cy="170" rx="34" ry="3" fill="#5BC88A" opacity="0"/>
+          <rect id="liquid" x="7" y="178" width="36" height="0"
+                fill="url(#lg)" filter="url(#glow)"/>
+          <ellipse id="surface" cx="25" cy="178" rx="17" ry="2.5"
+                   fill="#5BC88A" opacity="0"/>
         </g>
-        <rect x="14" y="14" width="3" height="150" rx="1.5" fill="rgba(255,255,255,0.4)"/>
-        <line x1="8" y1="50" x2="18" y2="50" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick75"/>
-        <line x1="8" y1="90" x2="18" y2="90" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick50"/>
-        <line x1="8" y1="130" x2="18" y2="130" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick25"/>
+
+        <!-- Glass highlight stripe -->
+        <path d="M 11 26 L 11 150" stroke="rgba(255,255,255,0.45)"
+              stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Tick marks (25 / 50 / 75) -->
+        <line x1="7" y1="138" x2="13" y2="138" stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick25"/>
+        <line x1="7" y1="98"  x2="13" y2="98"  stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick50"/>
+        <line x1="7" y1="58"  x2="13" y2="58"  stroke="rgba(31,77,58,0.35)" stroke-width="1" id="tick75"/>
       </svg>
-      <div id="bubbles" style="position:absolute;left:9px;bottom:11px;width:70px;height:160px;overflow:hidden;pointer-events:none"></div>
-      <div id="beadlets" style="position:absolute;left:9px;bottom:11px;width:70px;height:160px;overflow:hidden;pointer-events:none"></div>
-      <div id="burst" style="position:absolute;left:44px;top:90px;pointer-events:none"></div>
+
+      <!-- Particle overlays positioned on the tube interior -->
+      <div id="bubbles"  style="position:absolute;left:7px;top:18px;width:36px;height:160px;overflow:hidden;pointer-events:none"></div>
+      <div id="beadlets" style="position:absolute;left:7px;top:18px;width:36px;height:160px;overflow:hidden;pointer-events:none"></div>
+      <div id="burst"    style="position:absolute;left:25px;top:90px;pointer-events:none"></div>
     </div>
 
-    <!-- All four milestones visible from the start.
-         Locked = soft cream/grey; unlocked = forest + gold dot + sienna detail -->
+    <!-- Milestones -->
     <div class="miles">
       <div class="mile" id="m3" style="bottom:160px">
         <div class="mile-dot"></div>
@@ -325,10 +339,14 @@ var currentFillPct = 0;
 function updateUI(s) {
   var pct = s.fillPct;
   currentFillPct = pct;
-  // Liquid fill geometry: top of fill area = y=20, bottom = y=240, range = 220px
-  var maxH = 220;
+
+  // New tube fill geometry:
+  // 0%   -> liquid top at y = 178 (deepest point of rounded bottom)
+  // 100% -> liquid top at y = 18  (just inside the lip)
+  // Range = 160px. Rect is clipped so it conforms to the rounded U bottom.
+  var maxH = 160;
   var h = (pct / 100) * maxH;
-  var y = 240 - h;
+  var y = 178 - h;
 
   liquid.setAttribute("height", h);
   liquid.setAttribute("y", y);
@@ -373,7 +391,7 @@ function updateBeadlets(pct) {
     beadletsCreated = true;
     for (var i = 0; i < 7; i++) {
       var b = document.createElement("div");
-      var sz = 5 + Math.random() * 6;
+      var sz = 4 + Math.random() * 5;
       var maxBottom = Math.min(pct * 0.6, 55);
       b.style.cssText = "position:absolute;bottom:" + (2 + Math.random() * maxBottom) + "%;" +
         "left:" + (10 + Math.random() * 70) + "%;" +
@@ -389,7 +407,7 @@ function updateBeadlets(pct) {
 function spawnBubble() {
   if (bubblesEl.children.length > 6) return;
   var b = document.createElement("div");
-  var sz = 3 + Math.random() * 5;
+  var sz = 3 + Math.random() * 4;
   b.style.cssText = "position:absolute;bottom:0;left:" + (15 + Math.random() * 60) + "%;" +
     "width:" + sz + "px;height:" + sz + "px;border-radius:50%;" +
     "border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.15);" +
